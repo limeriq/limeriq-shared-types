@@ -63,7 +63,6 @@ SdlcTriggerEvent: pull_request | issue_comment | push | schedule | workflow_disp
 The envelope is the wire format for all messages between devices and nodes:
 
 ```
-LimerClawEnvelope
   +-- protocol_version: number
   +-- message_id: string (ULID or UUID)
   +-- sent_at: string (ISO 8601)
@@ -93,7 +92,6 @@ RelayControlMessage
   +-- peer_id?: string (connect_auth)
   +-- node_id?: string (connect_auth)
 
-RelayMessage = LimerClawEnvelope | RelayControlMessage
 ```
 
 Type guards:
@@ -106,17 +104,6 @@ HTTP API endpoint pairs:
 
 | Endpoint | Request Type | Response Type |
 |----------|-------------|---------------|
-| `POST /api/limerclaw/devices/register` | `DeviceRegisterRequest` | `DeviceRegisterResponse` |
-| `POST /api/limerclaw/nodes/register` | `NodeRegisterRequest` | `NodeRegisterResponse` |
-| `POST /api/limerclaw/nodes/:nodeId/heartbeat` | `NodeHeartbeatRequest` | `NodeHeartbeatResponse` |
-| `POST /api/limerclaw/pairing/create` | `PairingCreateRequest` | `PairingCreateResponse` |
-| `POST /api/limerclaw/pairing/resolve` | `PairingResolveRequest` | `PairingResolveResponse` |
-| `POST /api/limerclaw/pairing/confirm` | `PairingConfirmRequest` | `PairingConfirmResponse` |
-| `GET /api/limerclaw/nodes/me` | (none) | `NodesListResponse` |
-| `POST /api/limerclaw/push/notify` | `PushNotifyRequest` | `PushNotifyResponse` |
-| `GET /api/limerclaw/nodes/:nodeId/agents` | (none) | `NodeAgentsListResponse` |
-| `POST /api/limerclaw/nodes/:nodeId/agents/sync` | `AgentSyncRequest` | `AgentSyncResponse` |
-| `POST /api/limerclaw/events/publish` | `EventPublishRequest` | `EventPublishResponse` |
 
 Additional types:
 - `TaskDispatchRunMetadata` -- metadata for daemon task dispatch lifecycle
@@ -128,11 +115,6 @@ Maps 1:1 to Supabase table schemas:
 
 | Type | Table |
 |------|-------|
-| `LimerClawNodeRow` | `limerclaw_nodes` |
-| `LimerClawDeviceRow` | `limerclaw_devices` |
-| `LimerClawPairingSessionRow` | `limerclaw_pairing_sessions` |
-| `LimerClawPairingRow` | `limerclaw_pairings` |
-| `LimerClawNodeAgentRow` | `limerclaw_node_agents` |
 
 ### Agent Types (`src/agent-types.ts`)
 
@@ -159,7 +141,6 @@ AgentEventType: agent_created | agent_started | agent_stopped | agent_paused
 
 **Decrypted payload types:**
 
-The encrypted `ciphertext` inside `LimerClawEnvelope.encryption` decrypts to one of these payload shapes, discriminated by the `type` field:
 
 ```
 DecryptedPayload = ChatMessage
@@ -403,6 +384,5 @@ SetupStepId: env-check | db-migration | github-app | runner-registration | first
 ## Versioning Strategy
 
 - The package is published to GitHub Packages as `@darrenapfel/limeriq-shared-types` at version `0.1.0`.
-- It is consumed via the npm registry by `limeriq-control` (using an npm alias `@limerclaw/shared-types` -> `npm:@darrenapfel/limeriq-shared-types@^0.1.0`) and via git submodule by `limeriq-relay`, `limeriq-service`, and `limeriq-mobile-app`.
 - Breaking changes to envelope format require bumping `PROTOCOL_VERSION` in `src/constants.ts`.
 - All consumers must be updated simultaneously when envelope format changes.

@@ -1,9 +1,7 @@
-// Barrel export for @limerclaw/shared-types
+// Barrel export for @darrenapfel/limeriq-shared-types
 
 export * from './constants';
 export * from './envelope';
-export * from './api-contracts';
-export * from './db-types';
 export * from './agent-types';
 export * from './runtime-state';
 export * from './agent-automation';

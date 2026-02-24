@@ -1,7 +1,7 @@
 {
   "name": "@darrenapfel/limeriq-shared-types",
   "version": "0.1.0",
-  "description": "Shared TypeScript types for LimerClaw envelope, API contracts, and DB schema",
+  "description": "Shared TypeScript types for limeriq:agent contracts",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {

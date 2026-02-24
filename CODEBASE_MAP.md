@@ -71,11 +71,9 @@ Wire format types for relay communication.
 
 - `EnvelopePeer` interface (lines 4-8): Peer identity with `kind` and optional `device_id`
 - `EncryptionBlock` interface (lines 11-22): Encryption metadata (scheme, key_id, nonce, ciphertext, aad)
-- `LimerClawEnvelope` interface (lines 31-50): Full message envelope
   - `agent_id?: string` (line 47): Target agent ID (omit for boss agent)
   - `message_type?: string` (line 49): Routing hint (e.g. `'chat'`, `'interactive_prompt'`)
 - `RelayControlMessage` interface (lines 53-78): Control messages (ping/pong/error/backlog_truncated/connect_challenge/connect_auth/connect_ack) with optional fields for auth handshake (nonce, ts, proof, peer_kind, peer_id, node_id)
-- `RelayMessage` type (line 81): Union of `LimerClawEnvelope | RelayControlMessage`
 - `isRelayControlMessage()` function (lines 84-86): Type guard for control messages
 - `isEnvelope()` function (lines 89-91): Type guard for envelopes
 
@@ -103,11 +101,6 @@ HTTP API request/response type definitions. Imports `AgentKind`, `AgentStatus`, 
 ### `src/db-types.ts` (lines 1-77)
 Supabase table row type definitions. Imports `AgentKind`, `ExecutionMode` from `./agent-types`.
 
-- `LimerClawNodeRow` (lines 12-26): `limerclaw_nodes` table
-- `LimerClawDeviceRow` (lines 29-41): `limerclaw_devices` table
-- `LimerClawPairingSessionRow` (lines 44-52): `limerclaw_pairing_sessions` table
-- `LimerClawPairingRow` (lines 55-62): `limerclaw_pairings` join table
-- `LimerClawNodeAgentRow` (lines 65-76): `limerclaw_node_agents` table
 
 ### `src/agent-types.ts` (lines 1-153)
 Agent system type definitions. Uses the const-object-plus-type pattern for all enums.

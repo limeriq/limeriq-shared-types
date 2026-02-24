@@ -125,7 +125,6 @@ Other repos reference this package via git submodule and tsconfig path alias:
 {
   "compilerOptions": {
     "paths": {
-      "@limerclaw/shared-types": ["./shared-types/src"]
     }
   }
 }
@@ -135,7 +134,6 @@ If the consuming repo uses vitest, add a matching alias in `vitest.config.ts`:
 ```typescript
 resolve: {
   alias: {
-    '@limerclaw/shared-types': './shared-types/src',
   },
 },
 ```
@@ -147,9 +145,7 @@ resolve: {
 ```json
 {
   "dependencies": {
-    "@limerclaw/shared-types": "npm:@darrenapfel/limeriq-shared-types@^0.1.0"
   }
 }
 ```
 
-This allows `limeriq-control` to import from `@limerclaw/shared-types` the same way submodule consumers do, while fetching the package from the npm registry.

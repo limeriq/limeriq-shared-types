@@ -64,36 +64,26 @@ For new domain-specific contract files (e.g., a new subsystem):
 
 | Repo | Mechanism | Path Alias |
 |------|-----------|------------|
-| `limeriq-relay` | Git submodule at `./shared-types/` | `@limerclaw/shared-types` -> `./shared-types/src` (tsconfig paths + vitest alias) |
-| `limeriq-service` | Git submodule at `./shared-types/` | `@limerclaw/shared-types` -> `./shared-types/src` (tsconfig paths) |
-| `limeriq-mobile-app` | Git submodule at `./shared-types/` | `@limerclaw/shared-types` -> `./shared-types/src` |
-| `limeriq-control` | npm registry (GitHub Packages) | `@limerclaw/shared-types` -> `npm:@darrenapfel/limeriq-shared-types@^0.1.0` (npm alias in package.json) |
 
 ### Import Pattern
 
 ```typescript
-import type { LimerClawEnvelope, PeerKind } from '@limerclaw/shared-types';
-import { PROTOCOL_VERSION, isEnvelope } from '@limerclaw/shared-types';
 ```
 
 ### Key Types for Each Consumer
 
 **Relay (`limeriq-relay`):**
-- `LimerClawEnvelope`, `RelayControlMessage`, `RelayMessage` -- wire format
 - `isRelayControlMessage()`, `isEnvelope()` -- type guards for message routing
 - `PROTOCOL_VERSION`, `MAX_ENVELOPE_BYTES`, `MAX_BACKLOG_COUNT`, `BACKLOG_TTL_SECONDS`, `MAX_MSGS_PER_MINUTE` -- protocol constants
-- `agent_id`, `message_type` on `LimerClawEnvelope` -- relay passes through but does not inspect
 
 **Service (`limeriq-service`):**
 - `DeviceRegisterRequest/Response`, `PairingCreateRequest/Response`, etc. -- API contract types
 - `NodeAgentEntry`, `NodeAgentsListResponse`, `AgentSyncRequest/Response` -- agent sync API contracts
-- `LimerClawNodeRow`, `LimerClawDeviceRow`, `LimerClawPairingSessionRow`, `LimerClawPairingRow`, `LimerClawNodeAgentRow` -- DB row types
 - `NodeMode`, `NodeStatus`, `DeviceStatus`, `PairingSessionStatus`, `PairingStatus` -- status enums
 - `AgentKind`, `AgentStatus`, `ExecutionMode` -- agent enums (imported from `agent-types`)
 - `EventType`, `ALLOWED_EVENT_TYPES` -- push notification event types
 
 **Mobile App (`limeriq-mobile-app`):**
-- `LimerClawEnvelope`, `EncryptionBlock`, `EnvelopePeer` -- building envelopes to send
 - `RelayControlMessage`, `isRelayControlMessage()` -- handling relay control messages
 - `DeviceRegisterRequest/Response`, `PairingCreateRequest/Response`, `PairingResolveRequest/Response`, `PairingConfirmRequest/Response` -- API calls
 - `PROTOCOL_VERSION`, `HEARTBEAT_INTERVAL_SECONDS`, `EncryptionScheme`, `PeerKind`, `BOSS_AGENT_ID` -- constants
