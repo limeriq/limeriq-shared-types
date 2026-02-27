@@ -4,6 +4,7 @@
   "description": "Shared TypeScript types for limeriq:agent contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
@@ -15,6 +16,9 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   },
   "license": "UNLICENSED"
 }

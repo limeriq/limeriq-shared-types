@@ -35,6 +35,7 @@ export const ArtifactKind = {
   SPEC_DOCUMENT: 'spec_document',
   EVIDENCE_BUNDLE: 'evidence_bundle',
   GROUNDING_MANIFEST: 'grounding_manifest',
+  ATTESTATION: 'attestation',
   CONFIG: 'config',
   LOG: 'log',
   REPORT: 'report',
