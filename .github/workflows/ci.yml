@@ -37,7 +37,7 @@ jobs:
     needs: [typecheck, test]
     uses: limeriq/limeriq-policy/.github/workflows/reusable-policy-check.yml@main
     secrets:
-      policy_repo_token: ${{ secrets.LIMERIQ_PROJECT_BOT_TOKEN != '' && secrets.LIMERIQ_PROJECT_BOT_TOKEN || secrets.CROSS_REPO_PAT }}
+      policy_repo_token: ${{ secrets.LIMERIQ_PROJECT_BOT_TOKEN }}
     with:
       gate: merge
       risk_tier: high
