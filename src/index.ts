@@ -1,4 +1,4 @@
-// Barrel export for @limerclaw/shared-types
+// Barrel export for @darrenapfel/limeriq-shared-types
 
 export * from './constants';
 export * from './envelope';
@@ -17,3 +17,9 @@ export * from './dashboard-contracts';
 export * from './deployment-profile-contracts';
 export * from './runner-provider-contracts';
 export * from './setup-wizard-contracts';
+export * from './product-contract';
+export * from './grounding-manifest';
+export * from './grounding-claims';
+export * from './handoff-manifest';
+export * from './evidence-bundle';
+export * from './paper-trail-contracts';
