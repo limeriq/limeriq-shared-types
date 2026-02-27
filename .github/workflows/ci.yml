@@ -31,6 +31,18 @@ jobs:
       - run: npm ci
       - run: npm test
 
+  policy-check:
+    name: Policy Check (merge)
+    if: ${{ always() && github.repository_owner == 'limeriq' }}
+    needs: [typecheck, test]
+    uses: limeriq/limeriq-policy/.github/workflows/reusable-policy-check.yml@main
+    with:
+      gate: merge
+      risk_tier: high
+      verification_status: ${{ needs.typecheck.result == 'success' && needs.test.result == 'success' && 'pass' || 'fail' }}
+      pending_approvals: 0
+      fail_on: deny
+
   publish:
     name: Publish to GitHub Packages
     runs-on: ubuntu-latest
