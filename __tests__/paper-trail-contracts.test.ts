@@ -70,7 +70,7 @@ describe('enum type guards', () => {
   it('isArtifactKind accepts all valid kinds', () => {
     for (const k of [
       'source_code', 'test_result', 'spec_document', 'evidence_bundle',
-      'grounding_manifest', 'attestation', 'config', 'log', 'report', 'other',
+      'grounding_manifest', 'config', 'log', 'report', 'other',
     ]) {
       expect(isArtifactKind(k)).toBe(true);
     }

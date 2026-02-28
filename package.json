@@ -1,7 +1,7 @@
 {
   "name": "@darrenapfel/limeriq-shared-types",
   "version": "0.1.1",
-  "description": "Shared TypeScript types for limeriq:agent contracts",
+  "description": "Shared TypeScript types for LimerClaw envelope, API contracts, and DB schema",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -27,9 +27,6 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
-  },
-  "engines": {
-    "node": ">=22.0.0"
   },
   "license": "UNLICENSED"
 }
