@@ -48,6 +48,24 @@ import type { LimerClawEnvelope, PeerKind } from '@limerclaw/shared-types';
 import { PROTOCOL_VERSION, isEnvelope } from '@limerclaw/shared-types';
 ```
 
+## Pin-Update PR Rules (Downstream Consumers)
+
+Changes in this repo often require a consumer pin bump PR in `limeriq-client`.
+
+When contract exports change:
+
+1. Merge shared-types PR to `main`.
+2. Open follow-up PR in `limeriq-client` to update pinned commit SHA in `package.json` and `package-lock.json`.
+3. Regenerate lockfile with pinned toolchain:
+   - `npx -y npm@10.9.0 install --package-lock-only --ignore-scripts`
+4. Validate in `limeriq-client` before merge:
+   - `npm run check:shared-types-dep`
+   - `npx tsc --noEmit`
+   - `npx jest --no-coverage --testPathIgnorePatterns='integration|e2e'`
+   - `npm run compile`
+
+Do not assume downstream consumers track `latest`; they are intentionally pinned for deterministic CI.
+
 ### Key Types for Each Consumer
 
 **Relay (`limeriq-relay`):**
