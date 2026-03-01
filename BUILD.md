@@ -1,80 +1,87 @@
 # BUILD.md - limeriq-shared-types
 
-## Prerequisites
+## Purpose
 
-- Node.js (any recent LTS)
+`@darrenapfel/limeriq-shared-types` is the shared contract package for limeriq repos.
+It ships compiled `dist/` artifacts and is consumed by `limeriq-client` via a pinned git commit.
+
+## Toolchain
+
+- Node.js (CI currently runs Node 20 for this repo)
 - npm
 
-## Setup
+## Local Build + Test
+
+From repo root:
 
 ```bash
-npm install
-```
-
-This installs only `typescript` (the sole devDependency).
-
-## Type Checking
-
-```bash
+npm ci
 npm run typecheck
-# equivalent to: tsc --noEmit
+npm run build
+npm test
 ```
 
-There is no build/compile step. The `tsconfig.json` has `noEmit: true`. This package is consumed directly as TypeScript source via path aliases in consuming repos.
+## Packaging Behavior
 
-## tsconfig.json Configuration
+Current scripts are intentionally set so git/source installs produce usable artifacts:
 
-| Option | Value | Purpose |
-|--------|-------|---------|
-| `target` | ES2020 | Baseline JS target |
-| `module` | ESNext | ESM module format |
-| `moduleResolution` | bundler | Modern resolution for bundled consumers |
-| `strict` | true | Full strict mode |
-| `noEmit` | true | No JS output -- type checking only |
-| `isolatedModules` | true | Ensures compatibility with single-file transpilers |
-| `declaration` | true | Allows declaration generation (though noEmit prevents it) |
+- `prepare` -> `npm run build`
+- `prepack` -> `npm run build`
 
-## How to Add New Types
+Published/packed files are controlled by `package.json` `files`:
 
-1. **New enum-like constant:** Add to `src/constants.ts` using the const-object-plus-type pattern:
-   ```typescript
-   export const MyStatus = {
-     ACTIVE: 'active',
-     INACTIVE: 'inactive',
-   } as const;
-   export type MyStatus = (typeof MyStatus)[keyof typeof MyStatus];
-   ```
+- `dist/`
+- `README.md`
 
-2. **New API contract:** Add request/response interfaces to `src/api-contracts.ts` with a comment indicating the endpoint.
+## When to Trigger Consumer Pin Updates
 
-3. **New DB row type:** Add to `src/db-types.ts`, importing any needed enum types from `./constants`.
+Update downstream pins (especially in `limeriq-client`) when:
 
-4. **New agent-related type:** Add to `src/agent-types.ts`. Use the const-object-plus-type pattern for enums. If the type is a new decrypted payload shape, add it to the `DecryptedPayload` union and `DecryptedMessageType`.
+- exported types/interfaces/constants change
+- new files are exported from `src/index.ts`
+- contract shape changes are merged to `main`
 
-5. **New source file:** Create the file in `src/`, then add `export * from './your-file'` to `src/index.ts`.
+## Shared-Types Pin Update Workflow (to limeriq-client)
 
-6. **Validate:** Run `npm run typecheck` to ensure no errors.
+1. Merge shared-types PR to `main`.
+2. Copy the merged commit SHA.
+3. In `limeriq-client`, update dependency pin in `package.json`.
+4. Regenerate lockfile in `limeriq-client`:
 
-## Consuming This Package
-
-Other repos reference this package via git submodule and tsconfig path alias:
-
-```json
-// tsconfig.json in consuming repo
-{
-  "compilerOptions": {
-    "paths": {
-      "@limerclaw/shared-types": ["./shared-types/src"]
-    }
-  }
-}
+```bash
+npx -y npm@10.9.0 install --package-lock-only --ignore-scripts
 ```
 
-If the consuming repo uses vitest, add a matching alias in `vitest.config.ts`:
-```typescript
-resolve: {
-  alias: {
-    '@limerclaw/shared-types': './shared-types/src',
-  },
-},
+5. Run client validation checks before PR:
+
+```bash
+npm run check:shared-types-dep
+npx tsc --noEmit
+npx jest --no-coverage --testPathIgnorePatterns='integration|e2e'
+npm run compile
 ```
+
+## CI Tasks to Watch
+
+### This repo (`limeriq-shared-types`)
+
+Expected CI checks in `.github/workflows/ci.yml`:
+
+- `typecheck`
+- `test`
+- `publish` (push events only)
+
+### Consumer repo (`limeriq-client`)
+
+Pin-update PR should pass:
+
+- `dependency-guard`
+- `typecheck`
+- `test`
+- `compile`
+
+## Notes for Agents
+
+- Keep exports centralized in `src/index.ts`.
+- Do not introduce runtime-heavy logic here; keep this package contract-focused.
+- Treat shared-types changes as cross-repo changes that require explicit consumer pin updates.
